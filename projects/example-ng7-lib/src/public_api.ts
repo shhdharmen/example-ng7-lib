@@ -5,3 +5,4 @@
 export * from './lib/example-ng7-lib.service';
 export * from './lib/example-ng7-lib.component';
 export * from './lib/example-ng7-lib.module';
+export * from './lib/foo/foo.component';
