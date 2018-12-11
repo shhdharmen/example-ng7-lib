@@ -8,25 +8,96 @@
         min-width: 65px; // border: 1px solid transparent;
         z-index: 1;
         .handle {
-            transform: scale(0);
+            // thanks https://gist.github.com/vindia/3340088
+            transform: scale(0) rotate(45deg);
             transition: all 150ms ease-in-out;
             position: absolute;
+            border-top-left-radius: 23px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 23px;
+            border-bottom-left-radius: 23px;
             background: lightblue;
             width: 46px;
             height: 46px;
-            border-radius: 50%;
             top: 6px;
-            right: 20px;
+            right: 0px;
             bottom: 6px;
             margin-top: -12px;
+            opacity: 0;
             &.show {
-                transform: scale(1);
+                transform: scale(1) rotate(45deg);
+                right: 20px;
+                opacity: 1;
             }
         }
-        &:hover {
-            // border: 1px solid #ccc;
-            .handle {
-                transform: scale(1);
+    }
+}
+
+::ng-deep {
+    .scroll-bar {
+        margin-top: 23px;
+        margin-bottom: 23px;
+        &:hover,
+        &:active,
+        &:focus {
+            .scroll-thumbs {
+                &:before {
+                    transform: scale(1) rotate(45deg);
+                    right: 23px;
+                    opacity: 1;
+                }
+                &:after {
+                    transform: scale(1) translate(-50%, -50%);
+                    right: 23px;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    .scroll-thumbs {
+        &:after {
+            transform: scale(0);
+            transition: all 150ms ease-in-out;
+            content: attr(letter);
+            position: absolute;
+            width: 23px;
+            height: 23px;
+            right: 0px;
+            border-radius: 23px 0 23px 23px;
+            text-align: center;
+            font-size: 16px;
+            opacity: 0;
+            top: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        &:before {
+            transform: scale(0) rotate(45deg);
+            transition: all 150ms ease-in-out;
+            content: '';
+            position: absolute;
+            background: #add8e6;
+            width: 46px;
+            height: 46px;
+            right: 0px;
+            opacity: 0;
+            border-radius: 23px 0 23px 23px;
+            top: -50%;
+        }
+        &:hover,
+        &:active,
+        &:focus,
+        &.show {
+            &:before {
+                transform: scale(1) rotate(45deg);
+                right: 23px;
+                opacity: 1;
+            }
+            &:after {
+                transform: scale(1) translate(-50%, -50%);
+                right: 23px;
+                opacity: 1;
             }
         }
     }
