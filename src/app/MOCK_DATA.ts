@@ -997,4 +997,4 @@ export const DATA = [{'first_name': 'Lou'},
 {'first_name': 'Anne-corinne'},
 {'first_name': 'Marney'},
 {'first_name': 'Jelene'},
-{'first_name': 'Demetra'}]
+{'first_name': 'Demetra'}];
