@@ -11,7 +11,7 @@
     "build_lib": "ng build example-ng7-lib",
     "npm_pack": "cd dist/example-ng7-lib && npm pack",
     "package": "npm run build_lib && npm run npm_pack",
-    "postinstall": "ng build --aot -prod"
+    "postinstall": "npm run package && ng build --aot -prod"
   },
   "private": true,
   "dependencies": {
