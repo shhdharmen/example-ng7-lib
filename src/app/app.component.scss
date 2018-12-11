@@ -1,0 +1,13 @@
+::ng-deep {
+  .scroll-bar {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    border-radius: 4px;
+  }
+  .scroll-thumbs {
+    background-color: rgba(161, 27, 27, 0.4) !important;
+    &:hover,
+    &:active {
+      background-color: rgba(161, 27, 27, 0.7) !important;
+    }
+  }
+}

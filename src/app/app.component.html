@@ -1,4 +1,6 @@
 <enl-example-ng7-lib></enl-example-ng7-lib>
-<enl-foo>
+<div style="height: 500px">
+  <ng-scrollbar-indicator thumbClass="scroll-thumbs" barClass="scroll-bar">
     <div *ngFor="let item of DATA" [enlBar]="item.first_name">{{item.first_name}}</div>
-</enl-foo>
+  </ng-scrollbar-indicator>
+</div>
