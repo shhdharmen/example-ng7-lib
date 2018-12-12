@@ -1,131 +1,68 @@
-.foo-container {
-  height: 500px;
+@mixin showText {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
 }
 
-// ::ng-deep {
-//   .scroll-bar {
-//     margin-top: 23px;
-//     margin-bottom: 23px;
+@mixin showBackground {
+    transform: scale(1) rotate(45deg) translate(0, 0);
+    opacity: 1;
+}
 
-//     &:hover,
-//     &:active,
-//     &:focus {
-//       .scroll-thumbs {
-//         &:before {
-//           transform: scale(1) rotate(45deg);
-//           right: 23px;
-//           opacity: 1;
-//         }
-
-//         &:after {
-//           transform: scale(1) translate(-50%, -50%);
-//           right: 23px;
-//           opacity: 1;
-//         }
-//       }
-//     }
-//   }
-
-//   .scroll-thumbs {
-//     &:after {
-//       transform: scale(0);
-//       transition: all 150ms ease-in-out;
-//       content: attr(letter);
-//       position: absolute;
-//       width: 23px;
-//       height: 23px;
-//       right: 0px;
-//       border-radius: 23px 0 23px 23px;
-//       text-align: center;
-//       font-size: 16px;
-//       opacity: 0;
-//       top: 50%;
-//       display: flex;
-//       justify-content: center;
-//       align-items: center;
-//     }
-
-//     &:before {
-//       transform: scale(0) rotate(45deg);
-//       transition: all 150ms ease-in-out;
-//       content: '';
-//       position: absolute;
-//       background: #add8e6;
-//       width: 46px;
-//       height: 46px;
-//       right: 0px;
-//       opacity: 0;
-//       border-radius: 23px 0 23px 23px;
-//       top: -50%;
-//     }
-
-//     &:hover,
-//     &:active,
-//     &:focus,
-//     &.show {
-//       &:before {
-//         transform: scale(1) rotate(45deg);
-//         right: 23px;
-//         opacity: 1;
-//       }
-
-//       &:after {
-//         transform: scale(1) translate(-50%, -50%);
-//         right: 23px;
-//         opacity: 1;
-//       }
-//     }
-//   }
-// }
-::ng-deep {
-  .scroll-thumbs-indicator {
-    &:after {
-      transform: scale(0);
-      transition: all 150ms ease-in-out;
-      content: attr(letter);
-      position: absolute;
-      width: 23px;
-      height: 23px;
-      right: 0px;
-      border-radius: 23px 0 23px 23px;
-      text-align: center;
-      font-size: 16px;
-      opacity: 0;
-      top: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+.foo-container {
+    height: 500px;
+    position: relative;
+    .scroll-thumbs-indicator {
+        position: absolute;
+        .bubble-container-parent {
+            position: relative;
+            height: 100%;
+            .bubble-container {
+                position: absolute;
+                right: 105%;
+                .bubble {
+                    position: relative;
+                    .text,
+                    .background {
+                        transition: all 150ms ease-in-out; // position: absolute;
+                        width: 46px;
+                        height: 46px;
+                        border-radius: 23px 0 23px 23px; // right: 105%;
+                        opacity: 0;
+                        margin-top: -13px;
+                        margin-right: 16px;
+                        position: absolute;
+                        right: 105%;
+                    }
+                    .text {
+                        transform: scale(0) translate(55px, 0);
+                        text-align: center;
+                        font-size: 16px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        &:hover {
+                            @include showText();
+                        }
+                    }
+                    .background {
+                        transform: scale(0) rotate(45deg) translate(55px, -55px);
+                        background: #add8e6;
+                        &:hover {
+                            @include showBackground();
+                        }
+                    }
+                }
+                &.show {
+                    .bubble {
+                        .background {
+                            @include showBackground();
+                        }
+                        .text {
+                            @include showText();
+                        }
+                    }
+                }
+            }
+        }
     }
-
-    &:before {
-      transform: scale(0) rotate(45deg);
-      transition: all 150ms ease-in-out;
-      content: '';
-      position: absolute;
-      background: #add8e6;
-      width: 46px;
-      height: 46px;
-      right: 0px;
-      opacity: 0;
-      border-radius: 23px 0 23px 23px;
-      top: -50%;
-    }
-
-    &:hover,
-    &:active,
-    &:focus,
-    &.show {
-      &:before {
-        transform: scale(1) rotate(45deg);
-        right: 23px;
-        opacity: 1;
-      }
-
-      &:after {
-        transform: scale(1) translate(-50%, -50%);
-        right: 23px;
-        opacity: 1;
-      }
-    }
-  }
 }

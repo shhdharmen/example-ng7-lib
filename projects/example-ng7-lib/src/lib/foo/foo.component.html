@@ -1,5 +1,15 @@
 <div class="foo-container">
-  <ng-scrollbar thumbClass="scroll-thumbs" barClass="scroll-bar">
+  <ng-scrollbar [thumbClass]="thumbClass" [barClass]="barClass">
     <ng-content></ng-content>
   </ng-scrollbar>
+  <div class="scroll-thumbs-indicator" #scrollThumbsIndicator>
+    <div class="bubble-container-parent">
+      <div class="bubble-container">
+        <div class="bubble">
+          <div class="background"></div>
+          <div class="text"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

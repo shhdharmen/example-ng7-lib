@@ -2,8 +2,10 @@
   .scroll-bar {
     background-color: rgba(0, 0, 0, 0.4) !important;
     border-radius: 4px;
+    // min-width: 160px;
   }
   .scroll-thumbs {
+    // min-width: 160px;
     background-color: rgba(161, 27, 27, 0.4) !important;
     &:hover,
     &:active {
