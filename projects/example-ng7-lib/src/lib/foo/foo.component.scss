@@ -1,15 +1,130 @@
-@mixin showText {
-    transform: scale(1) translate(0, 0);
-    opacity: 1;
+$bubble-background-color: #2196f3 !default;
+$bubble-background-size: 46px !default;
+$bubble-font-size: 16px !default;
+$bubble-font-color: #fff !default;
+$bubble-margin-right: 16px !default;
+$bubble-container-right: 105% !default;
+$bubble-right: 105% !default;
+$bubble-square-like-border-radius: 4px !default;
+@mixin common-bubble {
+    transition: all 150ms ease-in-out;
+    width: $bubble-background-size;
+    height: $bubble-background-size;
+    opacity: 0;
+    margin-right: $bubble-margin-right;
+    position: absolute;
+    right: $bubble-right;
 }
 
-@mixin showBackground {
-    transform: scale(1) rotate(45deg) translate(0, 0);
-    opacity: 1;
+@mixin common-bubble-text {
+    color: $bubble-font-color;
+    text-align: center;
+    font-size: $bubble-font-size;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin water-drop {
+    &.water-drop {
+        position: relative;
+        .text,
+        .background {
+            @include common-bubble();
+            border-radius: $bubble-background-size/2 0 $bubble-background-size/2 $bubble-background-size/2;
+        }
+        .text {
+            @include common-bubble-text();
+            transform: scale(0) translate(55px, 0);
+        }
+        .background {
+            transform: scale(0) rotate(45deg) translate(55px, -55px);
+            background: $bubble-background-color;
+            box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+@mixin circular {
+    &.circular {
+        position: relative;
+        .text,
+        .background {
+            @include common-bubble();
+            border-radius: $bubble-background-size/2 $bubble-background-size/2 $bubble-background-size/2 $bubble-background-size/2;
+            transform: scale(0) translate(55px, 0);
+        }
+        .text {
+            @include common-bubble-text();
+        }
+        .background {
+            background: $bubble-background-color;
+            box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+@mixin square-like {
+    &.square-like {
+        position: relative;
+        .text,
+        .background {
+            @include common-bubble();
+            border-radius: $bubble-square-like-border-radius;
+            transform: scale(0) translate(55px, 0);
+        }
+        .text {
+            @include common-bubble-text();
+        }
+        .background {
+            background: $bubble-background-color;
+            box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+@mixin show-bubble($theme) {
+    &.#{$theme} {
+        .background {
+            @include showBackground($theme);
+        }
+        .text {
+            @include showText($theme);
+        }
+    }
+}
+
+@mixin showText($theme) {
+    @if $theme==water-drop {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
+    @if $theme==circular {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
+    @if $theme==square-like {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@mixin showBackground($theme) {
+    @if $theme==water-drop {
+        transform: scale(1) rotate(45deg) translate(0, 0);
+        opacity: 1;
+    }
+    @if $theme==circular {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
+    @if $theme==square-like {
+        transform: scale(1) translate(0, 0);
+        opacity: 1;
+    }
 }
 
 .foo-container {
-    height: 500px;
     position: relative;
     .scroll-thumbs-indicator {
         position: absolute;
@@ -18,48 +133,17 @@
             height: 100%;
             .bubble-container {
                 position: absolute;
-                right: 105%;
+                right: $bubble-container-right;
                 .bubble {
-                    position: relative;
-                    .text,
-                    .background {
-                        transition: all 150ms ease-in-out; // position: absolute;
-                        width: 46px;
-                        height: 46px;
-                        border-radius: 23px 0 23px 23px; // right: 105%;
-                        opacity: 0;
-                        margin-top: -13px;
-                        margin-right: 16px;
-                        position: absolute;
-                        right: 105%;
-                    }
-                    .text {
-                        transform: scale(0) translate(55px, 0);
-                        text-align: center;
-                        font-size: 16px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        &:hover {
-                            @include showText();
-                        }
-                    }
-                    .background {
-                        transform: scale(0) rotate(45deg) translate(55px, -55px);
-                        background: #add8e6;
-                        &:hover {
-                            @include showBackground();
-                        }
-                    }
+                    @include water-drop();
+                    @include circular();
+                    @include square-like();
                 }
                 &.show {
                     .bubble {
-                        .background {
-                            @include showBackground();
-                        }
-                        .text {
-                            @include showText();
-                        }
+                        @include show-bubble(water-drop);
+                        @include show-bubble(circular);
+                        @include show-bubble(square-like);
                     }
                 }
             }

@@ -1,11 +1,11 @@
-<div class="foo-container">
+<div class="foo-container" [ngStyle]="{'height': options.containerHeight + 'px'}">
   <ng-scrollbar [thumbClass]="thumbClass" [barClass]="barClass">
     <ng-content></ng-content>
   </ng-scrollbar>
   <div class="scroll-thumbs-indicator" #scrollThumbsIndicator>
     <div class="bubble-container-parent">
       <div class="bubble-container">
-        <div class="bubble">
+        <div class="bubble" [ngClass]="[options.theme]">
           <div class="background"></div>
           <div class="text"></div>
         </div>

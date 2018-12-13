@@ -1,11 +1,7 @@
-import { Observable } from 'rxjs';
-
 export interface FooOptions {
-    characters: ECharacters; // characters to be shown
     changeWhen: EChangeWhen; // when the indicator should change the character?
     // when character has reach top of container or as soon as it becomes visible in container
-    primaryLocator: string;
-    items: any[];
+    containerHeight: number;
     theme: ETheme;
 }
 
@@ -19,5 +15,12 @@ export enum EChangeWhen {
 }
 
 export enum ETheme {
-    plain = 'PLAIN'
+    circular = 'circular',
+    waterDrop = 'water-drop',
+    squareLike = 'square-like'
+}
+
+export enum EPosition {
+    auto = 'AUTO',
+    top = 'TOP'
 }

@@ -13,6 +13,6 @@ export class AppComponent implements OnInit {
   DATA: { 'first_name': string }[];
 
   ngOnInit() {
-    this.DATA = DATA.sort((a, b) => a.first_name < b.first_name ? -1 : (a.first_name > b.first_name ? 1 : 0));
+    this.DATA = DATA.sort((a, b) => a.first_name < b.first_name ? -1 : (a.first_name > b.first_name ? 1 : 0)).splice(750, DATA.length - 1);
   }
 }
