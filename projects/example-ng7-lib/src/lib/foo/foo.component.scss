@@ -14,6 +14,7 @@ $indicator-square-like-border-radius: 4px !default;
     margin-right: $indicator-margin-right;
     position: absolute;
     right: $indicator-right;
+    margin-top: -23px;
 }
 
 @mixin common-indicator-text {
@@ -139,7 +140,7 @@ $indicator-square-like-border-radius: 4px !default;
                     @include circular();
                     @include square-like();
                 }
-                &.show {
+                &.show, &.always {
                     .indicator {
                         @include show-indicator(water-drop);
                         @include show-indicator(circular);

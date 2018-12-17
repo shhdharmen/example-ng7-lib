@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DATA } from './MOCK_DATA';
-import { FooComponent, FooOptions, EChangeWhen, ETheme, EPosition } from 'projects/example-ng7-lib/src/public_api';
+import { FooComponent, FooOptions, EChangeWhen, ETheme, EPosition, EShowWhen } from 'projects/example-ng7-lib/src/public_api';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,8 @@ export class AppComponent implements OnInit {
     changeWhen: EChangeWhen.top,
     containerHeight: 500,
     theme: ETheme.squareLike,
-    position: EPosition.auto
+    position: EPosition.auto,
+    showWhen: EShowWhen.always
   };
   title = 'example-ng7-lib-app';
   DATA: { 'first_name': string }[];

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FooOptions, EChangeWhen, ETheme, EPosition, EShowWhen } from './foo-options';
 import { BarDirective } from './bar.directive';
-import { NgScrollbar } from 'ngx-scrollbar';
+// import { NgScrollbar } from 'ngx-scrollbar';
 
 /**
  * Class for ng-scrollbar-indicator.
@@ -56,7 +56,8 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
 
   // Children
   @ContentChildren(BarDirective) private barDirectives !: QueryList<BarDirective>;
-  @ViewChild(NgScrollbar) scrollBar: NgScrollbar;
+  // @ViewChild(NgScrollbar) scrollBar: NgScrollbar;
+  @ViewChild('mainDiv') scrollBar: ElementRef;
   @ViewChild('scrollThumbsIndicator') private scrollThumbsIndicator: ElementRef;
 
   // Properties
@@ -79,6 +80,7 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
     [EPosition.auto]: Function,
     [EPosition.top]: Function
   };
+  eShowWhen = EShowWhen;
 
   constructor() {
   }
@@ -106,11 +108,14 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
   private initHandlerFunctions() {
     this.handleTextFunctions = {
       [EPosition.auto]: () => {
-        const viewScrollTop = this.scrollBar.view.scrollTop;
-        const viewScrollHeight = this.scrollBar.view.scrollHeight;
+        // const viewScrollTop = this.scrollBar.view.scrollTop;
+        const viewScrollTop = this.scrollBar.nativeElement.scrollTop;
+        // const viewScrollHeight = this.scrollBar.view.scrollHeight;
+        const viewScrollHeight = this.scrollBar.nativeElement.scrollHeight;
         const percentTop = (viewScrollTop * 100) / viewScrollHeight;
         this.indicatorResponsible.style.top = (Math.round(percentTop * 100) / 100) + '%';
-        const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        // const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        const viewOffsetHeight = this.scrollBar.nativeElement.offsetHeight;
         this.listToBeConsidered.find(key => {
           const firstItem = this.firsts[key];
           const lastItem = this.lasts[key];
@@ -125,8 +130,10 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
         });
       },
       [EPosition.top]: () => {
-        const viewScrollTop = this.scrollBar.view.scrollTop;
-        const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        // const viewScrollTop = this.scrollBar.view.scrollTop;
+        const viewScrollTop = this.scrollBar.nativeElement.scrollTop;
+        // const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        const viewOffsetHeight = this.scrollBar.nativeElement.offsetHeight;
         this.listToBeConsidered.find(key => {
           const firstItem = this.firsts[key];
           const lastItem = this.lasts[key];
@@ -153,12 +160,13 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
 
     // Approach 0
     // We have to check if scrollbar is there or not, specifically for mobile devices
-    if (this.scrollBar.verticalScrollbar) {
-      this.scrollBar.verticalScrollbar.nativeElement.addEventListener('mouseover', (_e: MouseEvent) => {
-        timer = this.showIndicator(timer, 3000);
-      });
-    }
-    this.scrollBar.view.addEventListener('scroll', _e => {
+    // if (this.scrollBar.verticalScrollbar) {
+    //   this.scrollBar.verticalScrollbar.nativeElement.addEventListener('mouseover', (_e: MouseEvent) => {
+    //     timer = this.showIndicator(timer, 3000);
+    //   });
+    // }
+    // this.scrollBar.view.addEventListener('scroll', _e => {
+    this.scrollBar.nativeElement.addEventListener('scroll', _e => {
       timer = this.showIndicator(timer);
     });
 
@@ -179,22 +187,25 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
   private stylizeMainIndicator() {
     setTimeout(() => {
       let width = 0, height = 0, top = 0, left = 0;
-      if (this.scrollBar.verticalScrollbar) {
-        // for non-mobile devices
-        width = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetWidth;
-        height = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetHeight;
-        top = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetTop;
-        left = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetLeft;
-      } else {
-        // for mobile devices
-        width = 8;
-        height = this.scrollBar.view.offsetHeight;
-        top = this.scrollBar.view.offsetTop;
-        left = this.scrollBar.view.offsetWidth - 8;
-      }
+      // if (this.scrollBar.verticalScrollbar) {
+      // for non-mobile devices
+      // width = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetWidth;
+      // height = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetHeight;
+      // top = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetTop;
+      // left = this.scrollBar.verticalScrollbar.nativeElement.getElementsByClassName('ng-scrollbar-vertical')[0].offsetLeft;
+      // } else {
+      // for mobile devices
+      width = 8;
+      // height = this.scrollBar.view.offsetHeight;
+      height = this.scrollBar.nativeElement.offsetHeight;
+      // top = this.scrollBar.view.offsetTop;
+      top = this.scrollBar.nativeElement.offsetTop;
+      // left = this.scrollBar.view.offsetWidth - 8;
+      left = this.scrollBar.nativeElement.offsetWidth - 8;
+      // }
       this.mainIndicator.style.width = width + 'px';
-      this.mainIndicator.style.top = top + 'px';
-      this.mainIndicator.style.height = height + 'px';
+      this.mainIndicator.style.top = (top + 23) + 'px';
+      this.mainIndicator.style.height = (height - 46) + 'px';
       this.mainIndicator.style.left = left + 'px';
     });
   }
@@ -284,26 +295,6 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
     }
   }
 
-  private handleText() {
-    const viewScrollTop = this.scrollBar.view.scrollTop;
-    const viewScrollHeight = this.scrollBar.view.scrollHeight;
-    const percentTop = (viewScrollTop * 100) / viewScrollHeight;
-    this.indicatorResponsible.style.top = (Math.round(percentTop * 100) / 100) + '%';
-    const viewOffsetHeight = this.scrollBar.view.offsetHeight;
-    this.listToBeConsidered.find(key => {
-      const firstItem = this.firsts[key];
-      const lastItem = this.lasts[key];
-      const condition = (viewScrollTop <= firstItem.offsetTop &&
-        (firstItem.offsetHeight + firstItem.offsetTop) < (viewScrollTop + viewOffsetHeight)) ||
-        (viewScrollTop <= lastItem.offsetTop &&
-          (lastItem.offsetHeight + lastItem.offsetTop) < (viewScrollTop + viewOffsetHeight));
-      if (condition) {
-        this.scrollThumbsIndicator.nativeElement.getElementsByClassName('text')[0].innerHTML = key;
-        return condition;
-      }
-    });
-  }
-
   ngAfterContentInit() {
     this.startCalculation();
     this.barDirectives.changes.subscribe(_ => {
@@ -336,12 +327,14 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, On
   goToLetter(letter: string, duration: number = 150, position: string = 'first'): number {
     try {
       const offsetTop = this[position + 's'][letter.toUpperCase()].offsetTop;
-      this.scrollBar.scrollYTo(offsetTop, duration).subscribe(_ => {
-        return offsetTop;
-      }, err => {
-        console.log('Error in ng-scrollbar\'s scrollYTo function. Full error log can be found below:\n', err);
-        return -1;
-      });
+      // this.scrollBar.scrollYTo(offsetTop, duration).subscribe(_ => {
+      //   return offsetTop;
+      // }, err => {
+      //   console.log('Error in ng-scrollbar\'s scrollYTo function. Full error log can be found below:\n', err);
+      //   return -1;
+      // });
+      this.scrollBar.nativeElement.scrollTo({ top: offsetTop, behavior: 'smooth' });
+      return offsetTop;
     } catch (e) {
       console.error('The letter you tried to scroll to, could not be found in list. Full error log can be found below:\n', e);
       return -1;
