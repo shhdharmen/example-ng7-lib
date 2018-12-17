@@ -1,21 +1,27 @@
 import {
   Component, OnInit, Input, QueryList, ContentChildren, AfterContentInit, ElementRef, ViewChild,
   AfterViewInit,
-  HostListener
+  HostListener,
+  OnChanges
 } from '@angular/core';
-import { FooOptions, EChangeWhen, ETheme } from './foo-options';
+import { FooOptions, EChangeWhen, ETheme, EPosition, EShowWhen } from './foo-options';
 import { BarDirective } from './bar.directive';
 import { NgScrollbar } from 'ngx-scrollbar';
 
+/**
+ * Class for ng-scrollbar-indicator.
+ * @selector ng-scrollbar-indicator
+ */
 @Component({
   selector: 'ng-scrollbar-indicator',
-  templateUrl: './foo.component.html',
-  // styleUrls: ['./foo.component.scss']
+  templateUrl: './foo.component.html'
 })
-export class FooComponent implements OnInit, AfterContentInit, AfterViewInit {
+export class FooComponent implements OnInit, AfterContentInit, AfterViewInit, OnChanges {
   // Inputs
   private _thumbClass: string;
-  listToBeConsidered: { [x: string]: BarDirective; };
+  /**
+   * @see {@link https://www.npmjs.com/package/ngx-scrollbar#styling}
+  */
   @Input() set thumbClass(val: string) {
     this._thumbClass = val;
   }
@@ -23,46 +29,124 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit {
     return this._thumbClass;
   }
   private _barClass: string;
+  /**
+   * @see {@link https://www.npmjs.com/package/ngx-scrollbar#styling}
+  */
   @Input() set barClass(val: string) {
     this._barClass = val;
   }
   get barClass() {
     return this._barClass;
   }
-  @Input() options?: FooOptions = {
+  /**
+   * Default options for ng-scrollbar-indicator
+  */
+  defaultOptions: FooOptions = {
+    changeWhen: EChangeWhen.top,
     containerHeight: 500,
-    changeWhen: EChangeWhen.visible,
-    theme: ETheme.waterDrop
+    position: EPosition.top,
+    showWhen: EShowWhen.scroll,
+    theme: ETheme.waterDrop,
+    showCharacterPanel: false
   };
+  /**
+   * User input for options
+  */
+  @Input() options: FooOptions;
 
   // Children
-  @ContentChildren(BarDirective) barDirectives !: QueryList<BarDirective>;
+  @ContentChildren(BarDirective) private barDirectives !: QueryList<BarDirective>;
   @ViewChild(NgScrollbar) scrollBar: NgScrollbar;
-  @ViewChild('scrollThumbsIndicator') scrollThumbsIndicator: ElementRef;
+  @ViewChild('scrollThumbsIndicator') private scrollThumbsIndicator: ElementRef;
 
   // Properties
+  /**Current character in indicator */
+  activeCharacter: string;
   objectKeys = Object.keys;
-  numberOfBars: number;
+  private numberOfItems: number;
+  /**All Items Array */
   all: BarDirective[] = [];
+  /**JSON Object with first item of each character */
   firsts: { [x: string]: BarDirective } = {};
+  /**JSON Object with last item of each character */
   lasts: { [x: string]: BarDirective } = {};
-  ticking = false;
-  indicatorResponsible: any;
-  mainIndicator: any;
+  private listToBeConsidered: string[];
+  private characters = [];
+  private ticking = false;
+  private indicatorResponsible: any;
+  private mainIndicator: any;
+  private handleTextFunctions: {
+    [EPosition.auto]: Function,
+    [EPosition.top]: Function
+  };
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
+    this.initHandlerFunctions();
+  }
+
+  ngOnChanges() {
+    this.checkOptions();
+  }
+
+  private checkOptions() {
+    if (this.options) {
+      this.options.changeWhen = this.options.changeWhen ? this.options.changeWhen : this.defaultOptions.changeWhen;
+      this.options.containerHeight = this.options.containerHeight ? this.options.containerHeight : this.defaultOptions.containerHeight;
+      this.options.position = this.options.position ? this.options.position : this.defaultOptions.position;
+      this.options.showWhen = this.options.showWhen ? this.options.showWhen : this.defaultOptions.showWhen;
+      this.options.theme = this.options.theme ? this.options.theme : this.defaultOptions.theme;
+    } else {
+      this.options = Object.assign({}, this.defaultOptions);
+    }
+  }
+
+  private initHandlerFunctions() {
+    this.handleTextFunctions = {
+      [EPosition.auto]: () => {
+        const viewScrollTop = this.scrollBar.view.scrollTop;
+        const viewScrollHeight = this.scrollBar.view.scrollHeight;
+        const percentTop = (viewScrollTop * 100) / viewScrollHeight;
+        this.indicatorResponsible.style.top = (Math.round(percentTop * 100) / 100) + '%';
+        const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        this.listToBeConsidered.find(key => {
+          const firstItem = this.firsts[key];
+          const lastItem = this.lasts[key];
+          const condition = (viewScrollTop <= firstItem.offsetTop &&
+            (firstItem.offsetHeight + firstItem.offsetTop) < (viewScrollTop + viewOffsetHeight)) ||
+            (viewScrollTop <= lastItem.offsetTop &&
+              (lastItem.offsetHeight + lastItem.offsetTop) < (viewScrollTop + viewOffsetHeight));
+          if (condition) {
+            this.activeCharacter = key;
+            return condition;
+          }
+        });
+      },
+      [EPosition.top]: () => {
+        const viewScrollTop = this.scrollBar.view.scrollTop;
+        const viewOffsetHeight = this.scrollBar.view.offsetHeight;
+        this.listToBeConsidered.find(key => {
+          const firstItem = this.firsts[key];
+          const lastItem = this.lasts[key];
+          const condition = (viewScrollTop <= firstItem.offsetTop &&
+            (firstItem.offsetHeight + firstItem.offsetTop) < (viewScrollTop + viewOffsetHeight)) ||
+            (viewScrollTop <= lastItem.offsetTop &&
+              (lastItem.offsetHeight + lastItem.offsetTop) < (viewScrollTop + viewOffsetHeight));
+          if (condition) {
+            this.activeCharacter = key;
+            return condition;
+          }
+        });
+      }
+    };
   }
 
   ngAfterViewInit() {
     this.mainIndicator = this.scrollThumbsIndicator.nativeElement;
-    this.indicatorResponsible = this.scrollThumbsIndicator.nativeElement.getElementsByClassName('bubble-container')[0];
-    if (this.options.changeWhen === EChangeWhen.top) {
-      this.listToBeConsidered = this.lasts;
-    } else {
-      this.listToBeConsidered = this.firsts;
-    }
+    this.indicatorResponsible = this.scrollThumbsIndicator.nativeElement.getElementsByClassName('indicator-container')[0];
+
     this.stylizeMainIndicator();
 
     let timer = null;
@@ -115,12 +199,16 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit {
     });
   }
 
-  showIndicator(timer: any, delay?: number) {
+  /**This will show the indicator.
+   * @description This will add 'show' class to the indicator. And After delay(default 500), if will remove the same.
+   */
+  showIndicator(timer: any, delay = 500) {
     if (timer !== null) {
       this.indicatorResponsible.classList.add('show');
 
       // Approach 0
-      this.handleText();
+      // this.handleText();
+      this.handleTextFunctions[this.options.position]();
 
       // Approach 1
       // this.handleEvent(this, this.handleText);
@@ -129,7 +217,7 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit {
     }
     timer = setTimeout(() => {
       this.indicatorResponsible.classList.remove('show');
-    }, delay ? delay : 500);
+    }, delay);
     return timer;
   }
 
@@ -202,73 +290,66 @@ export class FooComponent implements OnInit, AfterContentInit, AfterViewInit {
     const percentTop = (viewScrollTop * 100) / viewScrollHeight;
     this.indicatorResponsible.style.top = (Math.round(percentTop * 100) / 100) + '%';
     const viewOffsetHeight = this.scrollBar.view.offsetHeight;
-    const keys = this.objectKeys(this.listToBeConsidered);
-    keys.find(key => {
-      const item = this.listToBeConsidered[key];
-      const offsetTop = item.offsetTop;
-      const offsetHeight = item.offsetHeight;
-      const condition = viewScrollTop <= offsetTop && (offsetHeight + offsetTop) < (viewScrollTop + viewOffsetHeight);
+    this.listToBeConsidered.find(key => {
+      const firstItem = this.firsts[key];
+      const lastItem = this.lasts[key];
+      const condition = (viewScrollTop <= firstItem.offsetTop &&
+        (firstItem.offsetHeight + firstItem.offsetTop) < (viewScrollTop + viewOffsetHeight)) ||
+        (viewScrollTop <= lastItem.offsetTop &&
+          (lastItem.offsetHeight + lastItem.offsetTop) < (viewScrollTop + viewOffsetHeight));
       if (condition) {
-        this.scrollThumbsIndicator.nativeElement.getElementsByClassName('text')[0].innerHTML = item.character;
+        this.scrollThumbsIndicator.nativeElement.getElementsByClassName('text')[0].innerHTML = key;
         return condition;
       }
     });
-    // this.all.find(item => {
-    //   const offsetTop = item.offsetTop;
-    //   const offsetHeight = item.offsetHeight;
-    //   const condition = viewScrollTop <= offsetTop && (offsetHeight + offsetTop) < (viewScrollTop + viewOffsetHeight);
-    //   if (condition) {
-    //     this.scrollThumbsIndicator.nativeElement.getElementsByClassName('text')[0].innerHTML = item.character;
-    //     return condition;
-    //   }
-    // });
   }
 
   ngAfterContentInit() {
-    this.calculateLength();
+    this.startCalculation();
     this.barDirectives.changes.subscribe(_ => {
-      this.calculateLength();
+      this.startCalculation();
     });
   }
 
-  private calculateLength() {
+  private startCalculation() {
     setTimeout(() => {
-      this.numberOfBars = this.barDirectives.length;
+      this.numberOfItems = this.barDirectives.length;
       this.barDirectives.forEach(item => {
         this.all.push(item);
         if (!this.firsts[item.character]) {
+          this.characters.push(item.character);
           this.firsts[item.character] = item;
         }
         this.lasts[item.character] = item;
       });
-      this.handleText();
+      if (this.options.changeWhen === EChangeWhen.top) {
+        this.listToBeConsidered = this.characters;
+      } else {
+        this.listToBeConsidered = this.characters.reverse();
+      }
+      this.handleTextFunctions[this.options.position]();
     });
   }
 
-  goToLetter(letter: string) {
-    this.scrollBar.scrollYTo(this.firsts[letter.toUpperCase()].offsetTop, 150);
+  /**Scroll to a specific letter, in given duration(default 150), positioned first of last. Returns the offsetTop if element found, else -1.
+   */
+  goToLetter(letter: string, duration: number = 150, position: string = 'first'): number {
+    try {
+      const offsetTop = this[position + 's'][letter.toUpperCase()].offsetTop;
+      this.scrollBar.scrollYTo(offsetTop, duration).subscribe(_ => {
+        return offsetTop;
+      }, err => {
+        console.log('Error in ng-scrollbar\'s scrollYTo function. Full error log can be found below:\n', err);
+        return -1;
+      });
+    } catch (e) {
+      console.error('The letter you tried to scroll to, could not be found in list. Full error log can be found below:\n', e);
+      return -1;
+    }
   }
 
   @HostListener('window:resize')
   onresize() {
     this.stylizeMainIndicator();
   }
-
-  // ngx-scroll-bar functions form https://www.npmjs.com/package/ngx-scrollbar#scroll-functions
-  scrollTo(options: ScrollToOptions) {
-    return this.scrollBar.scrollTo(options).subscribe();
-  }
-  scrollToElement(selector: any, offset?: any, duration?: any, easeFunc?: any) {
-    return this.scrollBar.scrollToElement(selector, offset, duration, easeFunc).subscribe();
-  }
-  scrollYTo(position: any, duration?: any, easeFunc?: any) {
-    return this.scrollBar.scrollYTo(position, duration, easeFunc).subscribe();
-  }
-  scrollToTop(duration?: any, easeFunc?: any) {
-    return this.scrollBar.scrollToTop(duration, easeFunc).subscribe();
-  }
-  scrollToBottom(duration?: any, easeFunc?: any) {
-    return this.scrollBar.scrollToBottom(duration, easeFunc).subscribe();
-  }
-
 }

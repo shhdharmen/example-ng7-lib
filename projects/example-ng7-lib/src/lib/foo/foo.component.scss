@@ -1,23 +1,23 @@
-$bubble-background-color: #2196f3 !default;
-$bubble-background-size: 46px !default;
+$indicator-background-color: #2196f3 !default;
+$indicator-background-size: 46px !default;
 $bubble-font-size: 16px !default;
-$bubble-font-color: #fff !default;
-$bubble-margin-right: 16px !default;
-$bubble-container-right: 105% !default;
-$bubble-right: 105% !default;
-$bubble-square-like-border-radius: 4px !default;
-@mixin common-bubble {
+$indicator-font-color: #fff !default;
+$indicator-margin-right: 16px !default;
+$indicator-container-right: 105% !default;
+$indicator-right: 105% !default;
+$indicator-square-like-border-radius: 4px !default;
+@mixin common-indicator {
     transition: all 150ms ease-in-out;
-    width: $bubble-background-size;
-    height: $bubble-background-size;
+    width: $indicator-background-size;
+    height: $indicator-background-size;
     opacity: 0;
-    margin-right: $bubble-margin-right;
+    margin-right: $indicator-margin-right;
     position: absolute;
-    right: $bubble-right;
+    right: $indicator-right;
 }
 
-@mixin common-bubble-text {
-    color: $bubble-font-color;
+@mixin common-indicator-text {
+    color: $indicator-font-color;
     text-align: center;
     font-size: $bubble-font-size;
     display: flex;
@@ -30,16 +30,16 @@ $bubble-square-like-border-radius: 4px !default;
         position: relative;
         .text,
         .background {
-            @include common-bubble();
-            border-radius: $bubble-background-size/2 0 $bubble-background-size/2 $bubble-background-size/2;
+            @include common-indicator();
+            border-radius: $indicator-background-size/2 0 $indicator-background-size/2 $indicator-background-size/2;
         }
         .text {
-            @include common-bubble-text();
+            @include common-indicator-text();
             transform: scale(0) translate(55px, 0);
         }
         .background {
             transform: scale(0) rotate(45deg) translate(55px, -55px);
-            background: $bubble-background-color;
+            background: $indicator-background-color;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
         }
     }
@@ -50,15 +50,15 @@ $bubble-square-like-border-radius: 4px !default;
         position: relative;
         .text,
         .background {
-            @include common-bubble();
-            border-radius: $bubble-background-size/2 $bubble-background-size/2 $bubble-background-size/2 $bubble-background-size/2;
+            @include common-indicator();
+            border-radius: $indicator-background-size/2 $indicator-background-size/2 $indicator-background-size/2 $indicator-background-size/2;
             transform: scale(0) translate(55px, 0);
         }
         .text {
-            @include common-bubble-text();
+            @include common-indicator-text();
         }
         .background {
-            background: $bubble-background-color;
+            background: $indicator-background-color;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
         }
     }
@@ -69,21 +69,21 @@ $bubble-square-like-border-radius: 4px !default;
         position: relative;
         .text,
         .background {
-            @include common-bubble();
-            border-radius: $bubble-square-like-border-radius;
+            @include common-indicator();
+            border-radius: $indicator-square-like-border-radius;
             transform: scale(0) translate(55px, 0);
         }
         .text {
-            @include common-bubble-text();
+            @include common-indicator-text();
         }
         .background {
-            background: $bubble-background-color;
+            background: $indicator-background-color;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
         }
     }
 }
 
-@mixin show-bubble($theme) {
+@mixin show-indicator($theme) {
     &.#{$theme} {
         .background {
             @include showBackground($theme);
@@ -128,22 +128,22 @@ $bubble-square-like-border-radius: 4px !default;
     position: relative;
     .scroll-thumbs-indicator {
         position: absolute;
-        .bubble-container-parent {
+        .indicator-container-parent {
             position: relative;
             height: 100%;
-            .bubble-container {
+            .indicator-container {
                 position: absolute;
-                right: $bubble-container-right;
-                .bubble {
+                right: $indicator-container-right;
+                .indicator {
                     @include water-drop();
                     @include circular();
                     @include square-like();
                 }
                 &.show {
-                    .bubble {
-                        @include show-bubble(water-drop);
-                        @include show-bubble(circular);
-                        @include show-bubble(square-like);
+                    .indicator {
+                        @include show-indicator(water-drop);
+                        @include show-indicator(circular);
+                        @include show-indicator(square-like);
                     }
                 }
             }

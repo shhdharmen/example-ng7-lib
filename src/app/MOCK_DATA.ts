@@ -1,4 +1,7 @@
 export const DATA = [{'first_name': 'Lou'},
+{'first_name': '!Hello'},
+{'first_name': '1Hello'},
+{'first_name': 'Babbie'},
 {'first_name': 'Babbie'},
 {'first_name': 'Aloysia'},
 {'first_name': 'Edith'},
