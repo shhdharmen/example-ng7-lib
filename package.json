@@ -9,12 +9,14 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build_lib": "ng build example-ng7-lib",
+    "copy_assets": "node assets-copy.js",
     "npm_pack": "cd dist/example-ng7-lib && npm pack",
-    "package": "npm run build_lib && npm run npm_pack"
+    "package": "npm run build_lib && npm run copy_assets && npm run npm_pack"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "~7.0.0",
+    "@angular/cdk": "^7.1.1",
     "@angular/common": "~7.0.0",
     "@angular/compiler": "~7.0.0",
     "@angular/core": "~7.0.0",
@@ -24,6 +26,8 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "core-js": "^2.5.4",
+    "ncp": "^2.0.0",
+    "ngx-scrollbar": "^4.1.0",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.26"
   },

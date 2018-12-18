@@ -9,11 +9,12 @@ import { FooComponent, FooOptions, EChangeWhen, ETheme, EPosition, EShowWhen } f
 })
 export class AppComponent implements OnInit {
   options: FooOptions = {
+    enable: true,
     changeWhen: EChangeWhen.top,
     containerHeight: 500,
-    theme: ETheme.squareLike,
-    position: EPosition.auto,
-    showWhen: EShowWhen.always
+    theme: ETheme.circular,
+    position: EPosition.top,
+    showWhen: EShowWhen.scroll
   };
   title = 'example-ng7-lib-app';
   DATA: { 'first_name': string }[];

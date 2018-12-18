@@ -1,15 +1,13 @@
 <div class="foo-container">
-  <!-- <ng-scrollbar [thumbClass]="thumbClass" [barClass]="barClass"> -->
   <div [ngStyle]="{'height': options.containerHeight + 'px', 'overflow-y': 'auto'}" #mainDiv>
     <ng-content></ng-content>
   </div>
-  <!-- </ng-scrollbar> -->
-  <div class="scroll-thumbs-indicator" #scrollThumbsIndicator>
+  <div class="scroll-thumbs-indicator" #scrollThumbsIndicator *ngIf="options.enable">
     <div class="indicator-container-parent">
       <div class="indicator-container" [ngClass]="{'always' : options.showWhen === eShowWhen.always}">
         <div class="indicator" [ngClass]="[options.theme]">
-          <div class="background"></div>
-          <div class="text">{{activeCharacter}}</div>
+          <div class="background" #background></div>
+          <div class="text">{{currentCharacterObserver | async}}</div>
         </div>
       </div>
     </div>

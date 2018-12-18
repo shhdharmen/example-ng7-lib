@@ -1,8 +1,9 @@
 $indicator-background-color: #2196f3 !default;
 $indicator-background-size: 46px !default;
 $bubble-font-size: 16px !default;
+$bubble-font-weight: 400 !default;
 $indicator-font-color: #fff !default;
-$indicator-margin-right: 16px !default;
+$indicator-margin-right: 8px !default;
 $indicator-container-right: 105% !default;
 $indicator-right: 105% !default;
 $indicator-square-like-border-radius: 4px !default;
@@ -14,13 +15,14 @@ $indicator-square-like-border-radius: 4px !default;
     margin-right: $indicator-margin-right;
     position: absolute;
     right: $indicator-right;
-    margin-top: -23px;
+    margin-top: - $indicator-background-size/2;
 }
 
 @mixin common-indicator-text {
     color: $indicator-font-color;
     text-align: center;
     font-size: $bubble-font-size;
+    font-weight: $bubble-font-weight;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -140,7 +142,8 @@ $indicator-square-like-border-radius: 4px !default;
                     @include circular();
                     @include square-like();
                 }
-                &.show, &.always {
+                &.show,
+                &.always {
                     .indicator {
                         @include show-indicator(water-drop);
                         @include show-indicator(circular);

@@ -9,6 +9,10 @@
   }
 */
 export interface FooOptions {
+    /** @description Enable or disable indicator
+     * @default true
+     */
+    enable?: boolean;
     /** @description When the indicator should change the character?
      * When character has reach top of container or as soon as it becomes visible in container
      * @default EChangeWhen.top

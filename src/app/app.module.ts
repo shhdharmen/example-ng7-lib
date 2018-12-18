@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { ExampleNg7LibModule } from 'example-ng7-lib';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { ExampleNg7LibModule } from 'example-ng7-lib';
   ],
   imports: [
     BrowserModule,
-    ExampleNg7LibModule
+    ExampleNg7LibModule,
+    NgScrollbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

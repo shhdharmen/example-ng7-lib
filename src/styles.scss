@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-// an example of custom style
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 $indicator-background-color: red;
 @import '../projects/example-ng7-lib/src/lib/foo/foo.component.scss';
